@@ -9,6 +9,8 @@ exports.addnhanvien = async (req, res, next) => {
             diachi: req.body.diachi,
             email: req.body.email,
             ghichu: req.body.ghichu,
+            tentaikhoan: req.body.tentaikhoan,
+            matkhau: req.body.matkhau
            
         });
         let result = await obj.save();
@@ -36,6 +38,8 @@ exports.updatenhanvien = async (req, res, next) => {
             obj.diachi= req.body.diachi;
             obj.email= req.body.email;
             obj.ghichu= req.body.ghichu;
+            obj.tentaikhoan= req.body.tentaikhoan;
+            obj.matkhau= req.body.matkhau;
        
         let result = await nhanvienModel.findByIdAndUpdate(id, obj, { new: true });
         res.json({ status: "update thanh cong", result: result });
@@ -63,3 +67,27 @@ exports.getnhanvien = async (req, res, next) => {
         res.json({ status: "not found", result: error });
     }
 };
+
+
+//login
+exports.login = async (req, res) => {
+    try {
+      const { tentaikhoan, matkhau } = req.body;
+      const user = await nhanvienModel.findOne({ tentaikhoan, matkhau });
+      if (user) {
+        res.json({
+          status: 200,
+          messenger: "Đăng nhập thành công",
+          data: user,
+        });
+      } else {
+        res.json({
+          status: 400,
+          messenger: "Lỗi, đăng nhập không thành công",
+          data: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };

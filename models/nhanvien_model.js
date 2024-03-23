@@ -26,6 +26,14 @@ const nhanvien_Schema = new db.mongoose.Schema(
       required: true
 
   },
+  tentaikhoan: {
+    type: String,
+     require: true
+  },
+  matkhau: {
+    type: String,
+    require: true
+  }
 
   },
   {
