@@ -1,5 +1,5 @@
 const { hoadonModel } = require("../models/hoadon_model");
-//cách 2: viết lại addhoadon
+
 exports.addhoadon = async (req, res, next) => {
     try {
         //console.log(req.body);

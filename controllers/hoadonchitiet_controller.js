@@ -1,8 +1,8 @@
 const { hoadonchitietModel } = require("../models/hoadonchitiet_model");
-//cách 2: viết lại addhoadonchitiet
+
 exports.addhoadonchitiet = async (req, res, next) => {
     try {
-        //console.log(req.body);
+
         let obj = new hoadonchitietModel({
             idhoadon: req.body.idnhanvien,
             soluong: req.body.hoten,

@@ -4,26 +4,26 @@ const nhanvien_Schema = new db.mongoose.Schema(
 
     hoten: {
       type: String,
-      required: true
+      
   },
   
   sdt: {
       type: String,
-      required: true
+      
   },
  
   diachi: {
       type: String,
-      required: true
+      
   },
 
   email: {
       type: String,
-      required: true
+      
   },
   ghichu: {
       type: String,
-      required: true
+      
 
   },
   tentaikhoan: {
@@ -32,6 +32,10 @@ const nhanvien_Schema = new db.mongoose.Schema(
   },
   matkhau: {
     type: String,
+    require: true
+  },
+  loaitaikhoan: {
+    type: Number,
     require: true
   }
 

@@ -1,8 +1,8 @@
 const { dichvuModel } = require("../models/dichvu_model");
-//cách 2: viết lại adddichvu
+
 exports.adddichvu = async (req, res, next) => {
     try {
-        //console.log(req.body);
+
         let obj = new dichvuModel({
             ten: req.body.ten,
             gia: req.body.gia,

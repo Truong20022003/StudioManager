@@ -1,8 +1,8 @@
 const { khachhangModel } = require("../models/khachhang_model");
-//cách 2: viết lại addkhachhang
+
 exports.addkhachhang = async (req, res, next) => {
     try {
-        //console.log(req.body);
+
         let obj = new khachhangModel({
             idnhanvien: req.body.idnhanvien,
             hoten: req.body.hoten,

@@ -1,8 +1,8 @@
 const { congviecModel } = require("../models/congviec_model");
-//cách 2: viết lại addcongviec
+
 exports.addcongviec = async (req, res, next) => {
     try {
-        //console.log(req.body);
+
         let obj = new congviecModel({
             tencongviec: req.body.tencongviec,
             idnhanvien: req.body.idnhanvien,

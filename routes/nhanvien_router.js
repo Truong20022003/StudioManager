@@ -7,5 +7,5 @@ router.put("/updatenhanvien/:id", NVCtl.updatenhanvien);
 router.delete("/deletenhanvien/:id", NVCtl.deletenhanvien);
 router.get("/getnhanvienById", NVCtl.getnhanvien);
 router.post("/login", NVCtl.login);
-
+router.post("/register", NVCtl.register);
 module.exports = router;
