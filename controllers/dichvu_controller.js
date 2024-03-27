@@ -8,7 +8,7 @@ exports.adddichvu = async (req, res, next) => {
             gia: req.body.gia,
             trangthai: req.body.trangthai,
             mota: req.body.mota,
-          
+            anh: req.body.anh,
         });
         let result = await obj.save();
         res.json({ status: "add thanh cong", result: result });
@@ -34,7 +34,7 @@ exports.updatedichvu = async (req, res, next) => {
             obj.gia= req.body.gia;
             obj.trangthai= req.body.trangthai;
             obj.mota= req.body.mota;
-      
+            obj.anh = req.body.anh;
         let result = await dichvuModel.findByIdAndUpdate(id, obj, { new: true });
         res.json({ status: "update thanh cong", result: result });
     } catch (error) {

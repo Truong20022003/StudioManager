@@ -1,28 +1,28 @@
 const db = require("./db");
 const dichvu_Schema = new db.mongoose.Schema(
   {
-
     ten: {
       type: String,
-      required: true
-  },
-  
-  gia: {
+      required: true,
+    },
+
+    gia: {
       type: Number,
-      required: true
-  },
-  trangthai: {
+      required: true,
+    },
+    trangthai: {
       type: Boolean,
-      required: true
-  },
+      required: true,
+    },
 
-  mota: {
+    mota: {
       type: String,
-      required: true
-  },
-
- 
-
+      required: true,
+    },
+    anh: {
+      type: String,
+      required: true,
+    },
   },
   {
     collection: "dichvus",

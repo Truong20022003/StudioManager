@@ -26,3 +26,42 @@ exports.getthongketongtien = async (req, res, next) => {
     res.status(500).json({ status: "error", error: "Internal server error" });
   }
 };
+// Thống kê tổng tiền của tất cả hóa đơn theo từng ngày
+exports.getThongKeTongTienTheoNgay = async (req, res, next) => {
+  try {
+    // Tính ngày bắt đầu và kết thúc của ngày hiện tại
+    const startDate = moment().startOf("day");
+    const endDate = moment(startDate).endOf("day");
+
+    const totalByDay = await hoadonModel.aggregate([
+      {
+        $match: {
+          ngaydathang: {
+            $gte: startDate.toDate(),
+            $lte: endDate.toDate(),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$ngaydathang" },
+            month: { $month: "$ngaydathang" },
+            day: { $dayOfMonth: "$ngaydathang" },
+          },
+          totalRevenue: { $sum: "$tongtien" },
+        },
+      },
+    ]);
+
+    const results = totalByDay.map((day) => ({
+      date: new Date(day._id.year, day._id.month - 1, day._id.day),
+      totalRevenue: day.totalRevenue,
+    }));
+
+    res.json({ status: "success", totalByDay: results });
+  } catch (error) {
+    console.error("Thống kê tổng doanh thu theo ngày thất bại", error);
+    res.status(500).json({ status: "error", error: "Internal server error" });
+  }
+};
