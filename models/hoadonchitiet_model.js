@@ -6,7 +6,10 @@ const hoadonchitiet_Schema = new db.mongoose.Schema(
         type: String,
         required: true
     },
-
+    idsanpham: {
+      type: String,
+      required: true
+  },
     soluong: {
         type: Number,
         required: true
