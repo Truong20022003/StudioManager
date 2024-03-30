@@ -1,35 +1,36 @@
 const db = require("./db");
 const khachhang_Schema = new db.mongoose.Schema(
   {
-
     idnhanvien: {
       type: String,
-      required: true
-  },
-  
-  hoten: {
+      required: false,
+    },
+    anh: {
       type: String,
-      required: true
-  },
-  sdt: {
-      type: String,
-      required: true
-  },
+      required: false,
+    },
 
-  diachi: {
+    hoten: {
       type: String,
-      required: true
-  },
+      required: true,
+    },
+    sdt: {
+      type: String,
+      required: true,
+    },
 
-  email: {
+    diachi: {
       type: String,
-      required: true
-  },
-  dsdichvu: {
+      required: true,
+    },
+
+    email: {
+      type: String,
+      required: true,
+    },
+    dsdichvu: {
       type: Array,
-
-  },
-
+    },
   },
   {
     collection: "khachhangs",

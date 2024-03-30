@@ -9,7 +9,7 @@ const congviec_Schema = new db.mongoose.Schema(
     
     idnhanvien: {
         type: String,
-        required: true
+        required: false
     },
     
     ngaybatdau: {

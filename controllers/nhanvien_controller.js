@@ -5,6 +5,7 @@ exports.addnhanvien = async (req, res, next) => {
 
         let obj = new nhanvienModel({
             hoten: req.body.hoten,
+            idnhanvien: req.body.idnhanvien,
             sdt: req.body.sdt,
             diachi: req.body.diachi,
             email: req.body.email,
@@ -34,6 +35,7 @@ exports.updatenhanvien = async (req, res, next) => {
         let id = req.params.id;
         let obj = {};
         obj.hoten= req.body.hoten;
+            obj.idnhanvien = req.body.idnhanvien 
             obj.sdt= req.body.sdt;
             obj.diachi= req.body.diachi;
             obj.email= req.body.email;
