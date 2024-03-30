@@ -5,6 +5,7 @@ exports.addkhachhang = async (req, res, next) => {
 
         let obj = new khachhangModel({
             idnhanvien: req.body.idnhanvien,
+            anh: req.body.anh,
             hoten: req.body.hoten,
             sdt: req.body.sdt,
             diachi: req.body.diachi,
@@ -33,6 +34,7 @@ exports.updatekhachhang = async (req, res, next) => {
         let obj = {};
         
         obj.idnhanvien = req.body.idnhanvien;
+        obj.anh = req.body.anh;
         obj.hoten = req.body.hoten;
         obj.sdt = req.body.sdt;
         obj.diachi = req.body.diachi;
