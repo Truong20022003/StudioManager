@@ -20,8 +20,8 @@ const dichvu_Schema = new db.mongoose.Schema(
       required: true,
     },
     anh: {
-      type: String,
-      required: true,
+      type: Array,
+      // required: true,
     },
   },
   {
