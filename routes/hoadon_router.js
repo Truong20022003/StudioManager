@@ -5,7 +5,7 @@ router.post("/addhoadon", HDCtl.addhoadon);
 router.get("/getListhoadon", HDCtl.getListhoadon);
 router.put("/updatehoadon/:id", HDCtl.updatehoadon);
 router.delete("/deletehoadon/:id", HDCtl.deletehoadon);
-router.get("/gethoadonById", HDCtl.gethoadon);
+router.get("/gethoadonById:id", HDCtl.gethoadon);
 
 
 module.exports = router;

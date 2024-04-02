@@ -5,7 +5,7 @@ router.post("/adddichvu", DVCtl.adddichvu);
 router.get("/getListdichvu", DVCtl.getListdichvu);
 router.put("/updatedichvu/:id", DVCtl.updatedichvu);
 router.delete("/deletedichvu/:id", DVCtl.deletedichvu);
-router.get("/getdichvuById", DVCtl.getdichvu);
+router.get("/getdichvuById/:id", DVCtl.getdichvu);
 
 
 module.exports = router;

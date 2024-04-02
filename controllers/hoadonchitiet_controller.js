@@ -4,11 +4,11 @@ exports.addhoadonchitiet = async (req, res, next) => {
     try {
 
         let obj = new hoadonchitietModel({
-            idhoadon: req.body.idnhanvien,
-            soluong: req.body.hoten,
-            dongia: req.body.sdt,
-            thanhtien: req.body.diachi,
-            idsanpham: req.body.idsanpham,
+            idhoadon: req.body.idhoadon,
+            soluong: req.body.soluong,
+            dongia: req.body.dongia,
+            thanhtien: req.body.thanhtien,
+            iddichvu: req.body.iddichvu,
         });
         let result = await obj.save();
         res.json({ status: "add thanh cong", result: result });
@@ -31,11 +31,11 @@ exports.updatehoadonchitiet = async (req, res, next) => {
         let id = req.params.id;
         let obj = {};
 
-        obj.idhoadon = req.body.idnhanvien;
-        obj.soluong = req.body.hoten;
-        obj.dongia = req.body.sdt;
-        obj.thanhtien = req.body.diachi;
-        obj.idsanpham= req.body.idsanpham;
+        obj.idhoadon = req.body.idhoadon;
+        obj.soluong = req.body.soluong;
+        obj.dongia = req.body.dongia;
+        obj.thanhtien = req.body.thanhtien;
+        obj.iddichvu= req.body.iddichvu;
         let result = await hoadonchitietModel.findByIdAndUpdate(id, obj, { new: true });
         res.json({ status: "update thanh cong", result: result });
     } catch (error) {

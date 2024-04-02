@@ -12,7 +12,9 @@ exports.addnhanvien = async (req, res, next) => {
             ghichu: req.body.ghichu,
             tentaikhoan: req.body.tentaikhoan,
             matkhau: req.body.matkhau,
-            loaitaikhoan: req.body.loaitaikhoan
+            loaitaikhoan: req.body.loaitaikhoan,
+            anh: req.body.anh,
+            trangthai: req.body.trangthai,
         });
         let result = await obj.save();
         res.json({ status: "add thanh cong", result: result });
@@ -34,8 +36,7 @@ exports.updatenhanvien = async (req, res, next) => {
     try {
         let id = req.params.id;
         let obj = {};
-        obj.hoten= req.body.hoten;
-            obj.idnhanvien = req.body.idnhanvien 
+            obj.hoten= req.body.hoten;
             obj.sdt= req.body.sdt;
             obj.diachi= req.body.diachi;
             obj.email= req.body.email;
@@ -43,7 +44,9 @@ exports.updatenhanvien = async (req, res, next) => {
             obj.tentaikhoan= req.body.tentaikhoan;
             obj.matkhau= req.body.matkhau;
             obj.loaitaikhoan= req.body.loaitaikhoan;
-       
+            obj.anh= req.body.anh;
+            obj.trangthai= req.body.trangthai;
+            
         let result = await nhanvienModel.findByIdAndUpdate(id, obj, { new: true });
         res.json({ status: "update thanh cong", result: result });
     } catch (error) {
