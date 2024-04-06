@@ -62,14 +62,14 @@ exports.deletenhanvien = async (req, res, next) => {
         // Kiểm tra xem id nhân viên có tồn tại trong bảng NhanVien_cong viec hay không
         const existingAssignment = await nhanvien_congviec_model.findOne({ id_nhanvien: id });
         if (existingAssignment) {
-            return res.json({ status: 403, message: "Nhân viên này đã có công việc được gán, không thể xóa." });
+            return res.status(403).json({ status: 403, message: "Nhân viên này đã có công việc được gán, không thể xóa." });
         }
 
         // Nếu không tồn tại trong bảng NhanVien_cong viec, tiến hành xóa
         let result = await nhanvienModel.findByIdAndDelete(id);
-        res.json({ status: 200, message: "Xóa nhân viên thành công", result: result });
+        return res.status(200).json({ status: 200, message: "Xóa nhân viên thành công", result: result });
     } catch (error) {
-        res.json({ status: "failed", message: "Xóa nhân viên không thành công", result: error });
+        return res.status(500).json({ status: "failed", message: "Xóa nhân viên không thành công", result: error });
     }
 
 };
