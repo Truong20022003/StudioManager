@@ -8,5 +8,6 @@ router.put("/updatedichvu/:id", Upload.array("anh", 5), DVCtl.updatedichvu);
 router.delete("/deletedichvu/:id", DVCtl.deletedichvu);
 router.get("/getdichvuById/:id", DVCtl.getdichvu);
 router.get("/getTop10DichVu", DVCtl.getTop10DichVu);
-
+router.get("/getNewlyAddedDichVu", DVCtl.getNewlyAddedDichVu);
+router.get("/searchDichVuByName", DVCtl.searchDichVuByName);
 module.exports = router;
