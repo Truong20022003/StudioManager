@@ -4,11 +4,6 @@ const nhanvien_Schema = new db.mongoose.Schema(
     hoten: {
       type: String,
     },
-    idnhanvien: {
-      type: String,
-      required: false,
-    },
-
     sdt: {
       type: String,
     },

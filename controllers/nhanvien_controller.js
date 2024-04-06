@@ -154,10 +154,24 @@ exports.register = async (req, res, next) => {
         const existingUser = await nhanvienModel.findOne({ tentaikhoan });
  
         let loaitaikhoan = 2;
+        let hoten = '';
+        let sdt = '';
+        let diachi = '';
+        let email = '';
+        let ghichu = '';
+        let anh = null;
+        let trangthai = 2;
         const obj = new nhanvienModel({
+            hoten,
+            sdt,
+            diachi,
+            email,
+            ghichu,
             tentaikhoan,
             matkhau,
-            loaitaikhoan 
+            loaitaikhoan,
+            anh,
+            trangthai
         });
 
         const result = await obj.save();
