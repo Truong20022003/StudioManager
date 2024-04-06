@@ -35,6 +35,14 @@ const nhanvien_Schema = new db.mongoose.Schema(
       type: Number,
       require: true,
     },
+    anh: {
+      type: String,
+      require: true,
+    },
+    trangthai: {
+      type: Number,
+      require: true,
+    },
   },
   {
     collection: "nhanviens",

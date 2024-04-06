@@ -6,25 +6,15 @@ const hoadonchitiet_Schema = new db.mongoose.Schema(
         type: String,
         required: true
     },
-    idsanpham: {
-      type: String,
-      required: true
-  },
-    soluong: {
-        type: Number,
-        required: true
-    },
-
-    dongia: {
-        type: Number,
-        required: true
-    },
-
+    
     thanhtien: {
         type: Number,
         required: true
     },
-
+    iddichvu: {
+      type: String,
+      required: true
+  },
   },
   {
     collection: "hoadonchitiets",

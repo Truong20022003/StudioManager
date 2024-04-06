@@ -1,3 +1,4 @@
+const { nhanvien_congviecModel, nhanvien_congviec_model } = require("../models/nhanvien_congviec_models");
 const { nhanvienModel } = require("../models/nhanvien_model");
 
 exports.addnhanvien = async (req, res, next) => {
@@ -12,7 +13,9 @@ exports.addnhanvien = async (req, res, next) => {
             ghichu: req.body.ghichu,
             tentaikhoan: req.body.tentaikhoan,
             matkhau: req.body.matkhau,
-            loaitaikhoan: req.body.loaitaikhoan
+            loaitaikhoan: req.body.loaitaikhoan,
+            anh: req.body.anh,
+            trangthai: req.body.trangthai,
         });
         let result = await obj.save();
         res.json({ status: "add thanh cong", result: result });
@@ -34,8 +37,7 @@ exports.updatenhanvien = async (req, res, next) => {
     try {
         let id = req.params.id;
         let obj = {};
-        obj.hoten= req.body.hoten;
-            obj.idnhanvien = req.body.idnhanvien 
+            obj.hoten= req.body.hoten;
             obj.sdt= req.body.sdt;
             obj.diachi= req.body.diachi;
             obj.email= req.body.email;
@@ -43,7 +45,9 @@ exports.updatenhanvien = async (req, res, next) => {
             obj.tentaikhoan= req.body.tentaikhoan;
             obj.matkhau= req.body.matkhau;
             obj.loaitaikhoan= req.body.loaitaikhoan;
-       
+            obj.anh= req.body.anh;
+            obj.trangthai= req.body.trangthai;
+            
         let result = await nhanvienModel.findByIdAndUpdate(id, obj, { new: true });
         res.json({ status: "update thanh cong", result: result });
     } catch (error) {
@@ -54,11 +58,20 @@ exports.updatenhanvien = async (req, res, next) => {
 exports.deletenhanvien = async (req, res, next) => {
     try {
         let id = req.params.id;
+        
+        // Kiểm tra xem id nhân viên có tồn tại trong bảng NhanVien_cong viec hay không
+        const existingAssignment = await nhanvien_congviec_model.findOne({ id_nhanvien: id });
+        if (existingAssignment) {
+            return res.status(403).json({ status: 403, message: "Nhân viên này đã có công việc được gán, không thể xóa." });
+        }
+
+        // Nếu không tồn tại trong bảng NhanVien_cong viec, tiến hành xóa
         let result = await nhanvienModel.findByIdAndDelete(id);
-        res.json({ status: "delete thanh cong", result: result });
+        return res.status(200).json({ status: 200, message: "Xóa nhân viên thành công", result: result });
     } catch (error) {
-        res.json({ status: "delete khong thanh cong", result: error });
+        return res.status(500).json({ status: "failed", message: "Xóa nhân viên không thành công", result: error });
     }
+
 };
 //getnhanvienbyid
 exports.getnhanvien = async (req, res, next) => {
