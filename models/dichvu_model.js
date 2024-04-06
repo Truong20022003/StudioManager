@@ -26,6 +26,7 @@ const dichvu_Schema = new db.mongoose.Schema(
   },
   {
     collection: "dichvus",
+    timestamps: true,
   }
 );
 const dichvuModel = db.mongoose.model("dichvuModel", dichvu_Schema);

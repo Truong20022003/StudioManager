@@ -132,68 +132,107 @@ exports.getdichvu = async (req, res, next) => {
     res.json({ status: "not found", result: error });
   }
 };
-/////getTop10DichVu
-// exports.getTop10DichVu = async (req, res, next) => {
-//   try {
-//     const top10DichVu = await hoadonchitietModel.aggregate([
-//       {
-//         $group: {
-//           _id: "$iddichvu", // Group theo ID dịch vụ
 
-//           tongSoLuong: { $sum: "$soluong" }, // Tính tổng số lượng sử dụng cho mỗi dịch vụ
-//         },
-//       },
-//       {
-//         $sort: { tongSoLuong: -1 }, // Sắp xếp theo tổng số lượng giảm dần
-//       },
-//       {
-//         $limit: 10, // Chỉ lấy top 10
-//       },
-//     ]);
-
-//     res.json({ status: "success", top10DichVu: top10DichVu });
-//   } catch (error) {
-//     res.status(500).json({ status: "error", error: error.message });
-//   }
-// };
 exports.getTop10DichVu = async (req, res, next) => {
   try {
     const top10DichVu = await hoadonchitietModel.aggregate([
       {
         $group: {
           _id: "$iddichvu", // Group theo ID dịch vụ
-
-          tongSoLuong: { $sum: "$soluong" }, // Tính tổng số lượng sử dụng cho mỗi dịch vụ
+          count: { $sum: 1 }, // Đếm số lần xuất hiện của mỗi dịch vụ
         },
       },
       {
-        $lookup: {
-          from: "dichvuModel", // Tên bảng chứa thông tin về dịch vụ
-          localField: "_id",
-          foreignField: "_id",
-          as: "dichvu", // Đặt tên cho mảng chứa thông tin của dịch vụ
-        },
-      },
-      {
-        $unwind: "$dichvu", // Tách các mảng dichvu thành các bản ghi độc lập
-      },
-      {
-        $sort: { tongSoLuong: -1 }, // Sắp xếp theo tổng số lượng giảm dần
+        $sort: { count: -1 }, // Sắp xếp theo số lần xuất hiện giảm dần
       },
       {
         $limit: 10, // Chỉ lấy top 10
       },
-      {
-        $project: {
-          _id: 1,
-          tenDichVu: "$dichvu.ten",
-          tongSoLuong: 1,
-        },
-      },
     ]);
 
-    res.json({ status: "success", top10DichVu: top10DichVu });
+    const top10DichVuIds = top10DichVu.map((dichvu) => dichvu._id);
+
+    // Lấy thông tin chi tiết của các dịch vụ trong top 10
+    const top10DichVuDetails = await dichvuModel.find({
+      _id: { $in: top10DichVuIds },
+    });
+
+    // Kết quả trả về
+    res.json({ status: "success", top10DichVu: top10DichVuDetails });
   } catch (error) {
-    res.status(500).json({ status: "error", error: error.message });
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
+exports.getNewlyAddedDichVu = async (req, res, next) => {
+  try {
+    // Lấy danh sách dịch vụ và sắp xếp theo thời gian tạo mới nhất
+    const newDichVu = await dichvuModel.aggregate([
+      { $match: { trangthai: true } }, // Chỉ lấy các dịch vụ có trạng thái true
+      { $sort: { createdAt: -1 } }, // Sắp xếp theo thời gian tạo mới nhất
+      { $limit: 5 }, // Chỉ lấy top 5 dịch vụ mới nhất
+    ]);
+
+    // Kiểm tra nếu có dịch vụ mới được thêm
+    if (newDichVu.length > 0) {
+      return res.status(200).json({
+        status: 200,
+        message: "Danh sách 5 dịch vụ mới được thêm và có trạng thái true",
+        newDV: newDichVu,
+      });
+    } else {
+      return res.status(404).json({
+        status: 404,
+        message: "Không có dịch vụ mới được thêm và có trạng thái true",
+        newDV: [],
+      });
+    }
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách dịch vụ mới:", error);
+    return res.status(500).json({
+      status: 500,
+      message: "Lỗi server",
+      newDV: [],
+    });
+  }
+};
+
+exports.searchDichVuByName = async (req, res, next) => {
+  try {
+    const { ten } = req.query;
+
+    if (!ten) {
+      return res.status(400).json({
+        status: 400,
+        message: "Vui lòng cung cấp tên dịch vụ để tìm kiếm",
+        data: [],
+      });
+    }
+    // Sử dụng regex để tìm kiếm không phân biệt hoa thường
+    const searchedDichVu = await dichvuModel.find({
+      ten: {
+        $regex: new RegExp(ten.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"), "i"),
+      }, // Tìm kiếm không phân biệt hoa thường
+    });
+    // Kiểm tra nếu có dịch vụ được tìm thấy
+    if (searchedDichVu.length > 0) {
+      return res.status(200).json({
+        status: 200,
+        message: `Danh sách dịch vụ có tên chứa "${ten}"`,
+        timkiem: searchedDichVu,
+      });
+    } else {
+      return res.status(404).json({
+        status: 404,
+        message: `Không tìm thấy dịch vụ có tên chứa "${ten}"`,
+        timkiem: [],
+      });
+    }
+  } catch (error) {
+    console.error("Lỗi khi tìm kiếm dịch vụ theo tên:", error);
+    return res.status(500).json({
+      status: 500,
+      message: "Lỗi server",
+      timkiem: [],
+    });
   }
 };
