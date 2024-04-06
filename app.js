@@ -13,6 +13,7 @@ var dichvuRouter = require("./routes/dichvu_router");
 var nhanvienRouter = require("./routes/nhanvien_router");
 var thongkeRoter = require("./routes/thongke-router");
 var congviecRoter = require("./routes/congviec_router");
+var nhanvien_congviecRouter = require("./routes/nhanvien_congviec_router");
 var app = express();
 
 // view engine setup
@@ -33,7 +34,8 @@ app.use("/hoadon", hoadonRouter);
 app.use("/dichvu", dichvuRouter);
 app.use("/nhanvien", nhanvienRouter);
 app.use("/thongke", thongkeRoter);
-app.use("/congviec",congviecRoter)
+app.use("/congviec",congviecRoter);
+app.use("/nhanviencongviec", nhanvien_congviecRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

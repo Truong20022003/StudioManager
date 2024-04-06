@@ -7,16 +7,6 @@ const hoadonchitiet_Schema = new db.mongoose.Schema(
         required: true
     },
     
-    soluong: {
-        type: Number,
-        required: true
-    },
-
-    dongia: {
-        type: Number,
-        required: true
-    },
-
     thanhtien: {
         type: Number,
         required: true

@@ -5,8 +5,6 @@ exports.addhoadonchitiet = async (req, res, next) => {
 
         let obj = new hoadonchitietModel({
             idhoadon: req.body.idhoadon,
-            soluong: req.body.soluong,
-            dongia: req.body.dongia,
             thanhtien: req.body.thanhtien,
             iddichvu: req.body.iddichvu,
         });
@@ -32,8 +30,6 @@ exports.updatehoadonchitiet = async (req, res, next) => {
         let obj = {};
 
         obj.idhoadon = req.body.idhoadon;
-        obj.soluong = req.body.soluong;
-        obj.dongia = req.body.dongia;
         obj.thanhtien = req.body.thanhtien;
         obj.iddichvu= req.body.iddichvu;
         let result = await hoadonchitietModel.findByIdAndUpdate(id, obj, { new: true });
