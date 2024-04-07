@@ -1,28 +1,38 @@
 const { nhanvien_congviecModel, nhanvien_congviec_model } = require("../models/nhanvien_congviec_models");
 const { nhanvienModel } = require("../models/nhanvien_model");
 
+
 exports.addnhanvien = async (req, res, next) => {
     try {
+        const { file } = req; // Sử dụng 'file' thay vì 'files' để chỉ lấy một ảnh
 
-        let obj = new nhanvienModel({
-            hoten: req.body.hoten,
-            idnhanvien: req.body.idnhanvien,
-            sdt: req.body.sdt,
-            diachi: req.body.diachi,
-            email: req.body.email,
-            ghichu: req.body.ghichu,
-            tentaikhoan: req.body.tentaikhoan,
-            matkhau: req.body.matkhau,
-            loaitaikhoan: req.body.loaitaikhoan,
-            anh: req.body.anh,
-            trangthai: req.body.trangthai,
-        });
-        let result = await obj.save();
-        res.json({ status: "add thanh cong", result: result });
+        if (file) {
+            const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${file.filename}`; // Lấy đường dẫn của ảnh
+
+            let obj = new nhanvienModel({
+                hoten: req.body.hoten,
+                idnhanvien: req.body.idnhanvien,
+                sdt: req.body.sdt,
+                diachi: req.body.diachi,
+                email: req.body.email,
+                ghichu: req.body.ghichu,
+                tentaikhoan: req.body.tentaikhoan,
+                matkhau: req.body.matkhau,
+                loaitaikhoan: req.body.loaitaikhoan,
+                anh: imageUrl, // Sử dụng đường dẫn của ảnh đầu tiên
+                trangthai: req.body.trangthai,
+            });
+
+            let result = await obj.save();
+            res.json({ status: "add thanh cong", result: result });
+        } else {
+            res.json({ status: "Vui lòng chọn một ảnh", result: null });
+        }
     } catch (error) {
         res.json({ status: "add khong thanh cong", result: error });
     }
 };
+
 //getlistnhanvien
 exports.getListnhanvien = async (req, res, next) => {
     try {

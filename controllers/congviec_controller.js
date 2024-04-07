@@ -5,7 +5,6 @@ exports.addcongviec = async (req, res, next) => {
 
         let obj = new congviecModel({
             tencongviec: req.body.tencongviec,
-            idnhanvien: req.body.idnhanvien,
             ngaybatdau: req.body.ngaybatdau,
             ngayketthuc: req.body.ngayketthuc,
             trangthai: req.body.trangthai,
@@ -32,7 +31,6 @@ exports.updatecongviec = async (req, res, next) => {
         let id = req.params.id;
         let obj = {};
         obj.tencongviec= req.body.tencongviec;
-        obj.idnhanvien= req.body.idnhanvien;
         obj.ngaybatdau= req.body.ngaybatdau;
         obj.ngayketthuc= req.body.ngayketthuc;
         obj.trangthai= req.body.trangthai;

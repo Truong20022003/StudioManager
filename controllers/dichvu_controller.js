@@ -11,7 +11,7 @@ exports.adddichvu = async (req, res, next) => {
         (file) =>
           `${req.protocol}://${req.get("host")}/uploads/${file.filename}`
       );
-
+    
       const newdata = new dichvuModel({
         ten: data.ten,
         gia: data.gia,
