@@ -1,73 +1,181 @@
 const { hoadonModel } = require("../models/hoadon_model");
 const moment = require("moment");
-// Thống kê tổng tiền của tất cả hóa đơn
-exports.getthongketongtien = async (req, res, next) => {
-  try {
-    const total = await hoadonModel.aggregate([
-      {
-        $group: {
-          _id: null,
-          totalRevenue: { $sum: "$tongtien" },
-        },
-      },
-    ]);
-    // Kiểm tra nếu không có dữ liệu trả về từ aggregate
-    if (total.length === 0) {
-      return res.json({ status: "Tổng doanh thu: ", totalRevenue: 0 });
-    }
-    res.json({
-      status: "Thống kê tổng tiền:",
-      Tong: total[0].totalRevenue,
-    });
-  } catch (error) {
-    // Xử lý lỗi nếu có
-    console.error("Thống kê tổng doanh thu thất bại", error);
-    res.status(500).json({ status: "error", error: "Internal server error" });
-  }
-};
-// Thống kê tổng tiền của tất cả hóa đơn theo từng ngày
-exports.getTongTienVaHoadonTrongNam = async (req, res, next) => {
-  try {
-    const { year } = req.query;
 
-    // Kiểm tra xem năm được cung cấp có hợp lệ không
-    if (!year || isNaN(year)) {
-      return res.status(400).json({ status: "error", error: "Invalid year" });
-    }
-
-    // Tính ngày bắt đầu và kết thúc của năm được cung cấp
-    const startDate = moment(`${year}-01-01`, "YYYY-MM-DD").toDate();
-    const endDate = moment(`${year}-12-31`, "YYYY-MM-DD").toDate();
-
-    // Lấy tất cả hóa đơn được cập nhật trong năm được cung cấp
-    const hoadons = await hoadonModel.find({
-      trangthai: true,
-      updatedAt: { $gte: startDate, $lte: endDate },
-    });
-
-    // Tính tổng tiền của tất cả hóa đơn
-    let totalTongTien = 0;
-    for (const hoadon of hoadons) {
-      totalTongTien += hoadon.tongtien;
-    }
-    // Trả về thông tin của tất cả hóa đơn và tổng tiền
-    res.json({
-      status: "success",
-      hoadons: hoadons,
-      tongTienTrongNam: totalTongTien,
-    });
-  } catch (error) {
-    console.error("Lỗi khi lấy hóa đơn và tính tổng tiền trong năm", error);
-    res.status(500).json({ status: "error", error: "Internal server error" });
-  }
-};
-
-exports.getSoLuongDonHangTrangThaiTrue = async (req, res, next) => {
+exports.getSoLuongDonHangTrangThaiTrueTatCa = async (req, res, next) => {
   try {
     const count = await hoadonModel.countDocuments({ trangthai: true });
     res.json({ status: "success", soLuongDonHang: count });
   } catch (error) {
     console.error("Lỗi khi thống kê số lượng đơn hàng", error);
     res.status(500).json({ status: "error", error: "Internal server error" });
+  }
+};
+///
+exports.getSoLuongDonHangTheoThangNamTrue = async (req, res, next) => {
+  try {
+    const year = parseInt(req.query.year) || new Date().getFullYear();
+    const month = parseInt(req.query.month) || new Date().getMonth() + 1;
+    // Nếu không có thông tin về năm và tháng từ client, sử dụng năm và tháng hiện tại
+
+    if (isNaN(month) || month < 1 || month > 12) {
+      return res
+        .status(400)
+        .json({ status: 400, message: "Tháng không hợp lệ" });
+    }
+
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0);
+
+    const onlineOrders = await hoadonModel
+      .find({
+        $and: [
+          { ngaytrahang: { $gte: startDate.toISOString() } },
+          { ngaytrahang: { $lte: endDate.toISOString() } },
+          { trangthai: true },
+        ],
+      })
+      .exec();
+
+    res.json({
+      status: 200,
+      message: `Số lượng đơn hàng trực tuyến trong tháng ${month}/${year}`,
+      tongsodon: onlineOrders.length,
+      danhsach: onlineOrders,
+    });
+  } catch (error) {
+    console.error("Lỗi khi thống kê số lượng đơn hàng trực tuyến:", error);
+    res.status(500).json({
+      status: 500,
+      message: "Đã xảy ra lỗi khi thống kê số lượng đơn hàng trực tuyến",
+    });
+  }
+};
+/////false so luong don ko thanh cong
+exports.getSoLuongDonHangTheoThangNamFalse = async (req, res, next) => {
+  try {
+    const year = parseInt(req.query.year) || new Date().getFullYear();
+    const month = parseInt(req.query.month) || new Date().getMonth() + 1;
+    // Nếu không có thông tin về năm và tháng từ client, sử dụng năm và tháng hiện tại
+
+    if (isNaN(month) || month < 1 || month > 12) {
+      return res
+        .status(400)
+        .json({ status: 400, message: "Tháng không hợp lệ" });
+    }
+
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0);
+
+    const onlineOrders = await hoadonModel
+      .find({
+        $and: [
+          { ngaytrahang: { $gte: startDate.toISOString() } },
+          { ngaytrahang: { $lte: endDate.toISOString() } },
+          { trangthai: false },
+        ],
+      })
+      .exec();
+
+    res.json({
+      status: 200,
+      message: `Số lượng đơn hàng trực tuyến trong tháng ${month}/${year}`,
+      tongsodon: onlineOrders.length,
+      danhsach: onlineOrders,
+    });
+  } catch (error) {
+    console.error("Lỗi khi thống kê số lượng đơn hàng trực tuyến:", error);
+    res.status(500).json({
+      status: 500,
+      message: "Đã xảy ra lỗi khi thống kê số lượng đơn hàng trực tuyến",
+    });
+  }
+};
+///////chuatest  getSoLuongDonHangTheoThang
+exports.getThongKeTongTien_NamBieuDo = async (req, res) => {
+  try {
+    const year = parseInt(req.query.year) || new Date().getFullYear();
+    const monthlyRevenues = [];
+    const monthlyOrders = []; // Mảng chứa các đơn hàng theo từng tháng
+
+    const hoaDonData = await hoadonModel.find({}).exec();
+
+    for (let month = 0; month < 12; month++) {
+      const filteredHoaDon = hoaDonData.filter((hoaDon) => {
+        const ngayTraHang = new Date(hoaDon.ngaytrahang);
+        return (
+          ngayTraHang.getFullYear() === year &&
+          ngayTraHang.getMonth() === month &&
+          hoaDon.trangthai === true
+        );
+      });
+
+      const totalRevenue = filteredHoaDon.reduce(
+        (acc, hoaDon) => acc + hoaDon.tongtien,
+        0
+      );
+
+      monthlyRevenues.push({
+        month: month + 1,
+        revenue: totalRevenue,
+      });
+
+      monthlyOrders.push({
+        month: month + 1,
+        orders: filteredHoaDon,
+      });
+    }
+
+    console.log(monthlyRevenues);
+
+    res.json({
+      status: 200,
+      message: `Doanh thu trong năm ${year} theo từng tháng`,
+      dulieu: monthlyRevenues,
+      monthlyOrders: monthlyOrders, // Thêm mảng monthlyOrders vào phản hồi JSON
+    });
+  } catch (error) {
+    console.error("Lỗi khi lấy doanh thu theo tháng:", error);
+    res
+      .status(500)
+      .json({ status: 500, message: "Đã xảy ra lỗi khi lấy doanh thu" });
+  }
+};
+////
+exports.getHoaDonThangVaNam = async (req, res) => {
+  try {
+    const year = parseInt(req.query.year) || new Date().getFullYear();
+    const month = parseInt(req.query.month) || new Date().getMonth() + 1;
+    // Nếu không có thông tin về năm và tháng từ client, sử dụng năm và tháng hiện tại
+
+    if (isNaN(month) || month < 1 || month > 12) {
+      return res
+        .status(400)
+        .json({ status: 400, message: "Tháng không hợp lệ" });
+    }
+
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0);
+
+    const orders = await hoadonModel
+      .find({
+        $and: [
+          { ngaytrahang: { $gte: startDate.toISOString() } },
+          { ngaytrahang: { $lte: endDate.toISOString() } },
+          { trangthai: true },
+        ],
+      })
+      .exec();
+
+    res.json({
+      status: 200,
+      message: `Các hóa đơn trong tháng ${month}/${year}`,
+      orders: orders,
+    });
+  } catch (error) {
+    console.error("Lỗi khi lấy các hóa đơn trong tháng:", error);
+    res.status(500).json({
+      status: 500,
+      message: "Đã xảy ra lỗi khi lấy các hóa đơn trong tháng",
+    });
   }
 };

@@ -1,18 +1,18 @@
 var express = require("express");
 var router = express.Router();
 const TKCTL = require("../controllers/thongke_controller");
-router.get("/getthongketongtien", TKCTL.getthongketongtien);
-router.get("/getTongTienVaHoadonTrongNam", TKCTL.getTongTienVaHoadonTrongNam);
 router.get(
-  "/getSoLuongDonHangTrangThaiTrue",
-  TKCTL.getSoLuongDonHangTrangThaiTrue
+  "/getSoLuongDonHangTrangThaiTrueTatCa",
+  TKCTL.getSoLuongDonHangTrangThaiTrueTatCa
 );
-
-// router.get(
-//   "/getThongKeTongTienTheoNgayVaThangTraHang",
-//   TKCTL.getThongKeTongTienTheoNgayVaThangTraHang
-// );
-// router.get("/doanhthu_thongso", TKCTL.getthongketdoanhthu);
-// router.get("/doanhthu_in_date", TKCTL.doanhthu_in_date);
-// router.get("/doanhthu_in_month", TKCTL.doanhthu_in_month);
+router.get(
+  "/getSoLuongDonHangTheoThangNamTrue",
+  TKCTL.getSoLuongDonHangTheoThangNamTrue
+);
+router.get(
+  "/getSoLuongDonHangTheoThangNamFalse",
+  TKCTL.getSoLuongDonHangTheoThangNamFalse
+);
+router.get("/getThongKeTongTien_NamBieuDo", TKCTL.getThongKeTongTien_NamBieuDo);
+router.get("/getHoaDonThangVaNam", TKCTL.getHoaDonThangVaNam);
 module.exports = router;
